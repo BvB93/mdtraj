@@ -32,6 +32,9 @@ jobs:
             buildplat: [macos-latest, macosx_arm64]
           - version: cp38
             buildplat: [macos-latest, macosx_arm64]
+    env:
+      # Disable MacOS M1 tests, as GH actions lacks the required hardware
+      CIBW_TEST_SKIP: "cp3*-macosx_arm64"
     steps:
       - uses: actions/checkout@v3
 
