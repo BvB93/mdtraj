@@ -9,6 +9,7 @@ binpos, AMBER NetCDF, AMBER mdcrd, TINKER arc and MDTraj HDF5.
 """
 from __future__ import print_function, absolute_import
 
+import os
 import sys
 from glob import glob
 
@@ -91,9 +92,16 @@ def format_extensions():
 
     zlib_include_dirs = []
     zlib_library_dirs = []
-    if sys.platform == 'win32':
-        # Conda puts the zlib headers in ./Library/... on windows
-        # If you're not using conda, good luck!
+    zlib_include_env = os.environ.get("ZLIB_INCLUDE_DIR")
+    zlib_lib_env = os.environ.get("ZLIB_LIB_DIR")
+
+    if zlib_include_env is not None and zlib_lib_env is not None:
+        # Manually specify the zlib include/lib dirs,
+        # useful on windows builds without conda
+        zlib_include_dirs += [zlib_include_env]
+        zlib_library_dirs += [zlib_lib_env]
+    elif sys.platform == 'win32':
+        # Conda puts the zlib headers in ./Library/...
         zlib_include_dirs += ["{}/Library/include".format(sys.prefix)]
         zlib_library_dirs += ["{}/Library/lib".format(sys.prefix)]
     else:

@@ -15,6 +15,19 @@ requires = [
 build = [
     "cp3*-manylinux_x86_64",
     "cp3*-macosx_x86_64",
+    "cp3*-win_amd64",
 ]
 build-verbosity = "3"
 manylinux-x86_64-image = "manylinux2014"
+
+[tool.cibuildwheel.windows]
+environment = { ZLIB_INCLUDE_DIR="zlib/include", ZLIB_LIB_DIR="zlib/lib_release" }
+before-build = [
+    "nuget install zlib-msvc-x64 -ExcludeVersion",
+    "mv zlib-msvc-x64/build/native zlib",
+    "mv zlib/lib_release/zlib.lib zlib/lib_release/z.lib",
+]
+repair-wheel-command = [
+    "pip install delvewheel",
+    "delvewheel repair {wheel} --add-path=zlib/bin_release --wheel-dir={dest_dir}",
+]
