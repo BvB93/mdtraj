@@ -20,6 +20,17 @@ build = [
 ]
 build-verbosity = "3"
 manylinux-x86_64-image = "manylinux2014"
+test-command = [
+    "pip list",
+    "pytest {package}/tests",
+]
+test-requires = [
+    "pytest",
+    "tables",
+    "pandas",
+    "networkx",
+    "gsd",
+]
 
 [tool.cibuildwheel.windows]
 environment = { ZLIB_INCLUDE_DIR="zlib/include", ZLIB_LIB_DIR="zlib/lib_release" }
