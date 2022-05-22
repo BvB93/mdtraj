@@ -23,9 +23,21 @@ jobs:
         buildplat:
           - [ubuntu-latest, manylinux_x86_64]
           - [macos-latest, macosx_x86_64]
+          - [macos-latest, macosx_arm64]
           - [windows-latest, win_amd64]
+        exclude:
+          - version: cp36
+            buildplat: [macos-latest, macosx_arm64]
+          - version: cp37
+            buildplat: [macos-latest, macosx_arm64]
+          - version: cp38
+            buildplat: [macos-latest, macosx_arm64]
     steps:
       - uses: actions/checkout@v3
+
+      - name: Enable macosx_arm64 cross-compilation
+        if: matrix.buildplat[1] == 'macosx_arm64'
+        run: echo "CIBW_ARCHS_MACOS=arm64" >> $GITHUB_ENV
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.5.0
